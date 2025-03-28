@@ -16,8 +16,18 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from api.views import CreateUserView
+# TokenObtainPairView, TokenRefreshView are an pre-build tools which allows us to obtain access and refresh token into refresh the token
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+
+# This file is for the URL configuration of the project. It is the main entry point of the project.
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/user/register/", CreateUserView.as_view(), name="register"),
+    path("api/token/", TokenObtainPairView.as_view(), name="get_token"),  # will provide the access token
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),  # will provide the refresh token
+    path("api-auth/", include("rest_framework.urls")),
+    path("api/", include("api.urls")),  # Include the urls of the api app in the project urls file so that we can access the api routes from the project urls file itself
 ]
